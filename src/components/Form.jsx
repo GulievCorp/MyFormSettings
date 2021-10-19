@@ -15,6 +15,17 @@ export default function Form() {
     setPassword('');
   };
 
+  const handleClickRegister = () => {
+    const form = {
+      firstname,
+      lastname,
+      email,
+      password,
+    };
+    console.log(form);
+    handleClickClear();
+  };
+
   return (
     <div>
       <div className="row">
@@ -52,7 +63,7 @@ export default function Form() {
       </div>
       <br />
       <div className="row">
-        <Button className="btn" variant="contained" color="primary">
+        <Button onClick={handleClickRegister} className="btn" variant="contained" color="primary">
           Зарегистрироваться
         </Button>
         <Button onClick={handleClickClear} className="btn" variant="contained" color="secondary">
