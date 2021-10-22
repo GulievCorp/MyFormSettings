@@ -2,6 +2,20 @@ import React from 'react';
 import TextField from '@mui/material/TextField';
 import { Button } from '@mui/material';
 import { useForm } from 'react-hook-form';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+
+const schema = yup.object().shape({
+  firstname: yup.string().min(2, 'Слишком короткое имя'),
+  lastname: yup.string().min(2, 'Слишком короткая фамилия'),
+  email: yup.string().email('Неверная почта').required(),
+  password: yup
+    .number()
+    .min(3, 'Слишком короткий пароль')
+    .positive()
+    .integer()
+    .required('Это обязательное поле'),
+});
 
 const defaultValues = {
   firstname: '',
@@ -11,19 +25,20 @@ const defaultValues = {
 };
 
 export default function Form() {
-  const { handleSubmit, reset, register, formState } = useForm({ defaultValues });
+  const { handleSubmit, reset, register, formState } = useForm({
+    defaultValues,
+    resolver: yupResolver(schema),
+  });
   const onSubmit = (values) => {
     console.log(values);
     reset();
-  }
+  };
   return (
     <div>
       <div className="row">
         <TextField
           name="firstname"
-          {...register('firstname', {
-            required: 'Это обязательное поле',
-          })}
+          {...register('firstname')}
           helperText={formState.errors.firstname && formState.errors.firstname.message}
           error={!!formState.errors.firstname}
           className="inptTxt"
@@ -31,9 +46,7 @@ export default function Form() {
           fullWidth
         />
         <TextField
-          {...register('lastname', {
-            required: 'Это обязательное поле',
-          })}
+          {...register('lastname')}
           helperText={formState.errors.lastname && formState.errors.lastname.message}
           error={!!formState.errors.lastname}
           className="inptTxt"
@@ -45,13 +58,7 @@ export default function Form() {
       </div>
       <div className="row">
         <TextField
-          {...register('email', {
-            required: 'Это обязательное поле',
-            pattern: {
-              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-              message: 'invalid email address',
-            },
-          })}
+          {...register('email')}
           helperText={formState.errors.email && formState.errors.email.message}
           error={!!formState.errors.email}
           className="inptTxt"
@@ -59,9 +66,7 @@ export default function Form() {
           fullWidth
         />
         <TextField
-          {...register('password', {
-            required: 'Это обязательное поле',
-          })}
+          {...register('password')}
           helperText={formState.errors.password && formState.errors.password.message}
           error={!!formState.errors.password}
           className="inptTxt"
@@ -80,11 +85,7 @@ export default function Form() {
           color="primary">
           Зарегистрироваться
         </Button>
-        <Button
-          onClick={() => reset()}
-          className="btn"
-          variant="contained"
-          color="secondary">
+        <Button onClick={() => reset()} className="btn" variant="contained" color="secondary">
           Очистить
         </Button>
       </div>
