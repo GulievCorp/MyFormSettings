@@ -24,14 +24,16 @@ const defaultValues = {
   password: '',
 };
 
-export default function Form() {
+export default function Form({ nextStep, setFormValues }) {
   const { handleSubmit, reset, register, formState } = useForm({
     defaultValues,
     resolver: yupResolver(schema),
   });
   const onSubmit = (values) => {
+    setFormValues(values);
     console.log(values);
     reset();
+    nextStep('address');
   };
   return (
     <div>
@@ -78,15 +80,15 @@ export default function Form() {
       </div>
       <br />
       <div className="row">
+        <Button onClick={() => reset()} className="btn" variant="contained" color="secondary">
+          Очистить
+        </Button>
         <Button
           onClick={handleSubmit(onSubmit)}
           className="btn"
           variant="contained"
           color="primary">
-          Зарегистрироваться
-        </Button>
-        <Button onClick={() => reset()} className="btn" variant="contained" color="secondary">
-          Очистить
+          Далее
         </Button>
       </div>
     </div>
